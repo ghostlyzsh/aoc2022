@@ -19,32 +19,17 @@ func main() {
     games := strings.Split(input, "\n")
 
     score := 0
+    letToNum := map[string]int{"A": 0, "B": 1, "C": 2, "X": 0, "Y": 1, "Z": 2}
     for _, game := range games {
         letter := strings.Split(game, " ")
-        player1 := 0
-        player2 := 0
-        if letter[0] == "A" {
-            player1 = 0
-        } else if letter[0] == "B" {
-            player1 = 1
-        } else {
-            player1 = 2
-        }
-        if letter[1] == "X" {
-            player2 = (player1 + 2) % 3
-        } else if letter[1] == "Y" {
-            player2 = player1
-        } else {
-            player2 = (player1 + 1) % 3
-        }
+        player1 := letToNum[letter[0]]
 
-        fmt.Println(player1, player2)
-        if (player2 + 1) % 3 == player1 {
-            score += 1 + player2
-        } else if (player2 + 2) % 3 == player1 {
-            score += 7 + player2
+        if letter[1] == "X" {
+            score += 1 + (player1 + 2) % 3
+        } else if letter[1] == "Z" {
+            score += 7 + (player1 + 1) % 3
         } else {
-            score += 4 + player2
+            score += 4 + player1
         }
     }
     
