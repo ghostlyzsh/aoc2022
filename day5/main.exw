@@ -1,0 +1,116 @@
+include std/sequence.e
+include std/text.e
+
+function atoi(sequence input)
+    integer output = 0
+    for a = 0 to length(input)-1 do
+        if input[$-a] = 32 then
+            continue
+        end if
+        output += (input[$-a] - 48) * power(10, a)
+    end for
+    return output
+end function
+
+function pop(sequence stack, integer i) 
+    integer len = length(stack) 
+ 
+    if len then      
+        sequence tailVar = tail(stack, i)
+        return {head(stack, len-i), tailVar} 
+    else  
+        return {}
+    end if 
+end function
+
+integer file_num = open("input.txt", "r")
+
+sequence lines = {}
+
+object x
+while 1 do
+    x = gets(file_num)
+    if atom(x) then
+        exit
+    end if
+    if length(x) != 0 then
+        if sim_index(x, "\n") < 0.1 then
+            x = "*"
+        end if
+        x = trim(x, "\n")
+    end if
+    lines = lines & {x}
+end while
+close(file_num)
+
+integer i = 1
+while 1 do
+    if sim_index(lines[i], "*") < 0.1 then
+        exit
+    end if
+
+    i += 1
+end while
+
+integer linebreak = i
+
+i -= 1
+sequence listnum = trim(lines[i])
+sequence strnums = split(listnum, "   ")
+sequence nums = {}
+for a = 1 to length(strnums) do
+    nums = nums & atoi(strnums[a])
+end for
+integer listAmount = nums[$]
+
+sequence crateStacks = {}
+
+i -= 1
+sequence firstcrates = split(lines[i][2..$-1], "] [")
+for a = 1 to length(firstcrates) do
+    crateStacks = crateStacks & {firstcrates[a]}
+end for
+i -= 1
+while i >= 1 do
+    for a = 1 to listAmount do
+        if lines[i][a * 4 - 2] != 32 then
+            crateStacks[a] = append(crateStacks[a], lines[i][a * 4 - 2])
+        end if
+    end for
+    i -= 1
+end while
+
+for a = 1 to length(crateStacks) do
+    for b = 1 to length(crateStacks[a]) do
+        printf(1, "%s", crateStacks[a][b])
+    end for
+    printf(1, "\n")
+end for
+
+for a = linebreak + 1 to length(lines) do
+    sequence commandP1 = split(lines[a][6..$], " from ")
+    sequence commandP11 = split(commandP1[2], " to ")
+    sequence commandP2 = split(lines[a][6..$], " to ")
+    sequence command = atoi(commandP1[1]) & atoi(commandP11[1]) & atoi(commandP2[2])
+
+    sequence list
+    sequence val
+    -- process command
+    --for b = 1 to command[1] do
+        for c = 1 to length(crateStacks[command[2]]) do
+            printf(1, "%s", crateStacks[command[2]][c])
+        end for
+        for c = 1 to length(command) do
+            printf(1, "%d", command[c])
+        end for
+        printf(1, "\n")
+        {list, val} = pop(crateStacks[command[2]], command[1])
+        crateStacks[command[2]] = list
+        crateStacks[command[3]] = crateStacks[command[3]] & val
+    --end for
+end for
+
+
+for a = 1 to length(crateStacks) do
+    printf(1, "%s\n", crateStacks[a][$])
+end for

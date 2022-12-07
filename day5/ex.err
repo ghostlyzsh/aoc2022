@@ -1,0 +1,19 @@
+/home/ghostlyzsh/dev/aoc2022/day5/main.exw:107
+<0236>:: 'pop' needs 2 arguments
+        {list, val} = pop(crateStacks[command[2]])
+                                                 ^
+
+
+--- Defined Words ---
+EU4
+EU4_1
+EU4_1_0
+CONSOLE
+UNIX
+LINUX
+X86_64
+BITS64
+LONG64
+E64
+EUI
+-------------------
